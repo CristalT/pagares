@@ -22,10 +22,11 @@ function createWindow () {
    */
   mainWindow = new BrowserWindow({
     width: 1000,
-    height: 430,
+    height: 550,
     useContentSize: true,
     webPreferences: {
       devTools: false,
+      nativeWindowOpen: true,
       // Change from /quasar.conf.js > electron > nodeIntegration;
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
       nodeIntegration: process.env.QUASAR_NODE_INTEGRATION,
@@ -38,6 +39,19 @@ function createWindow () {
 
   mainWindow.menuBarVisible = false
   mainWindow.loadURL(process.env.APP_URL)
+
+  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+      event.preventDefault()
+      Object.assign(options, {
+        modal: true,
+        parent: mainWindow,
+        webPreferences: {
+          devTools: false
+        }
+      })
+      event.newGuest = new BrowserWindow(options)
+      event.newGuest.menuBarVisible = false
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
