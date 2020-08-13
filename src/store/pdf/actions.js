@@ -22,7 +22,7 @@ export const printPdf = (ctx, data) => {
                   widths: ['*', 60, 15, 15, 60, 15, 40],
                   body: [
                     [
-                      { text: 'Sellado ', border: [false, false]},
+                      { text: ' ', border: [false, false]},
                       { text: 'Vence el ', border: [false, false], alignment: 'right' },
                       { text: initDate.format('DD'), border: [false, false], bold: true, alignment: 'center' },
                       { text: 'de', border: [false, false], alignment: 'center' },
@@ -40,7 +40,7 @@ export const printPdf = (ctx, data) => {
             [
               {
                 table: {
-                  widths: [100, '*', 100],
+                  widths: [100, '*', 200],
                   body: [
                     [
                       { text: 'Nº: ' + i + '/' + data.quantity, border: [false, false] },
@@ -79,7 +79,7 @@ export const printPdf = (ctx, data) => {
                   body: [
                     [
                       { text: (data.firstName + ' ' + data.lastName).toUpperCase(), border: [false, false, false, true], alignment: 'center', fillColor: '#cccccc' },
-                      { text: ' pagaré sin protesto (Art. 50 Ley 123)', border: [false, false], },
+                      { text: ' pagaré sin protesto (Art.50-D. Ley 5965/63)', border: [false, false], },
                     ]
                   ]
                 },

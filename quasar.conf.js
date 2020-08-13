@@ -18,7 +18,7 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-      
+
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -160,6 +160,7 @@ module.exports = function (/* ctx */) {
       bundler: 'packager', // 'packager' or 'builder'
 
       packager: {
+        platform: 'win32'
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
 
         // OS X / Mac App Store
@@ -175,7 +176,10 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'receiptmaker'
+        appId: 'payoff',
+        win: {
+          target: 'portable'
+        }
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration

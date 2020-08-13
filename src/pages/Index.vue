@@ -88,7 +88,7 @@
       </div>
       <div class="fieldset-title">Datos del Firmante</div>
       <div class="row q-col-gutter-sm">
-        <div class="col-5">
+        <div class="col-4">
           <q-input
             outlined
             dense
@@ -106,7 +106,7 @@
             :rules="[val => val && val.length >= 4 || 'Ingrese el apellido del firmante']"
           />
         </div>
-        <div class="col-2">
+        <div class="col-3">
           <q-input
             outlined
             dense
