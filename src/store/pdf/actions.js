@@ -252,5 +252,5 @@ export const printPdf = (ctx, data) => {
       }
     }
   }
-  pdfMake.createPdf(dd).download('output.pdf')
+  pdfMake.createPdf(dd).download(('PAGARES_' + data.lastName.replace(/ /g, '_') + '_' + data.firstName.replace(/ /g, '_')).toUpperCase() + '.pdf')
 }
