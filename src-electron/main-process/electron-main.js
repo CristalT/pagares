@@ -40,18 +40,20 @@ function createWindow () {
   mainWindow.menuBarVisible = false
   mainWindow.loadURL(process.env.APP_URL)
 
+
+
   mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
       event.preventDefault()
       Object.assign(options, {
         modal: true,
         parent: mainWindow,
         webPreferences: {
-          devTools: false
+          devTools: false,
         }
       })
       event.newGuest = new BrowserWindow(options)
       event.newGuest.menuBarVisible = false
-  })
+    })
 
   mainWindow.on('closed', () => {
     mainWindow = null

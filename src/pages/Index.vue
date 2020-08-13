@@ -213,6 +213,26 @@ export default {
       this.printPdf(this.formData)
     },
     onReset () { }
+  },
+  created () {
+    if (!process.env.PROD) {
+      this.formData = {
+        currentDate: '2018-08-08',
+        expDay: 5,
+        expMonth: 'SEPTEMBER 2020',
+        firstName: 'TEST CUSTOMER',
+        lastName: 'TESTING',
+        document: '30222222',
+        address1: 'ADDRESS EXAMPLE',
+        address2: 'CITY EXAMPLE',
+        address3: 'PROVINCE EXAMPLE',
+        phone: '12131231',
+        product: 'PRODUCT OF SALE',
+        amount: '12353',
+        currency: 'DOLAR',
+        quantity: 6
+      }
+    }
   }
 }
 </script>

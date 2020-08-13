@@ -121,11 +121,11 @@ export const printPdf = (ctx, data) => {
             [
               {
                 table: {
-                  widths: [90, 150],
+                  widths: [90, 180],
                   body: [
                     [
                       { text: ' Pagadero en ', border: [false, false], margin: [0, 12, 0, 0] },
-                      { text: ' Larroque 123 ', border: [false, false, false, true], margin: [0, 12, 0, 0] }
+                      { text: ' Larroque 334, C. del Uruguay ', border: [false, false, false, true], margin: [0, 12, 0, 0] }
                     ],
                   ]
                 },
@@ -136,7 +136,7 @@ export const printPdf = (ctx, data) => {
             [
               {
                 table: {
-                  widths: [90, 150],
+                  widths: [90, 180],
                   body: [
                     [
                       { text: ' Firmante ', border: [false, false] },
@@ -151,7 +151,7 @@ export const printPdf = (ctx, data) => {
             [
               {
                 table: {
-                  widths: [90, 150],
+                  widths: [90, 180],
                   body: [
                     [
                       { text: ' DNI / CUIT ', border: [false, false] },
@@ -166,7 +166,7 @@ export const printPdf = (ctx, data) => {
             [
               {
                 table: {
-                  widths: [90, 150],
+                  widths: [90, 180],
                   body: [
                     [
                       { text: ' Domicilio ', border: [false, false] },
@@ -181,7 +181,7 @@ export const printPdf = (ctx, data) => {
             [
               {
                 table: {
-                  widths: [90, 150],
+                  widths: [90, 180],
                   body: [
                     [
                       { text: ' Localidad ', border: [false, false] },
@@ -196,7 +196,7 @@ export const printPdf = (ctx, data) => {
             [
               {
                 table: {
-                  widths: [90, 150],
+                  widths: [90, 180],
                   body: [
                     [
                       { text: ' Provincia ', border: [false, false] },
@@ -211,7 +211,7 @@ export const printPdf = (ctx, data) => {
             [
               {
                 table: {
-                  widths: [90, 150],
+                  widths: [90, 180],
                   body: [
                     [
                       { text: ' Teléfono ', border: [false, false] },
@@ -252,5 +252,5 @@ export const printPdf = (ctx, data) => {
       }
     }
   }
-  pdfMake.createPdf(dd).open()
+  pdfMake.createPdf(dd).download('output.pdf')
 }
