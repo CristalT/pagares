@@ -8,14 +8,6 @@ const currency = val => {
   }).format(val)
 }
 
-const calcExp = (expMonth, expDay) => {
-  const year = expMonth.split(' ')[1]
-  const month = moment(expMonth.split(' ')[0], 'MMMM').format('MM')
-  const day = expDay
-  const initDate = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD')
-  return initDate
-}
-
 const dateExplode = (date) => {
   const strDay = moment(date, 'DD-MM-YYYY').format('DD')
   const strMonth = moment(date, 'DD-MM-YYYY').format('MMMM')
@@ -28,9 +20,16 @@ const dateExplode = (date) => {
   }
 }
 
+const getCurrencyStyle = (value) => {
+  if (value.toLowerCase().indexOf('dolar') > -1) {
+    return 'U$S'
+  }
+  return '$'
+}
+
 export {
   numeroALetras,
-  calcExp,
   currency,
-  dateExplode
+  dateExplode,
+  getCurrencyStyle
 }

@@ -1,6 +1,7 @@
 <template>
   <q-page padding>
     <q-form
+      ref="mainForm"
       autocorrect="off"
       autocapitalize="off"
       autocomplete="off"
@@ -12,7 +13,7 @@
         Datos del Pagaré
       </div>
       <div class="row q-col-gutter-sm">
-        <div class="col-4">
+        <div class="col-6">
           <date-input
             label="Fecha de Impresión"
             v-model="formData.currentDate"
@@ -20,90 +21,42 @@
             :rules="[val => val && val.length || 'Complete la fecha del día']"
           />
         </div>
-        <div class="col-4">
-          <q-select
-            outlined
-            dense
-            label="Día vencimiento"
-            :options="[5, 10, 15, 20, 25]"
-            v-model="formData.expDay"
-            :rules="[val => val || 'Elija el día para cada vencimiento']"
+        <div class="col-6">
+          <date-input
+            label="Próximo Vencimiento"
+            v-model="formData.expDate"
+            autofocus
+            :rules="[val => val && val.length || 'Complete la fecha del vencimiento']"
           />
         </div>
-        <div class="col-4">
-          <q-select
-            outlined
-            dense
-            label="Mes próximo vto."
-            :options="monthsOptions"
-            v-model="formData.expMonth"
-            :rules="[val => val !== null && val !== '' || 'Elija el mes del primer pagaré']"
-          />
-        </div>
-        <div class="col-12">
+        <div class="col-8">
           <q-input
             outlined
             dense
-            label="Descripción del Bien entregado"
+            label="Descripción"
             v-model="formData.product"
             :rules="[val => val && val.length > 4 || 'Detalle el bien que se entrega al firmante']"
           />
         </div>
         <div class="col-4">
           <q-input
-
-            type="number"
             outlined
             dense
-            label="Importe"
-            step="0.01"
-            v-model.number="formData.amount"
-            :rules="[val => val > 0 || 'Ingrese monto de cada pagaré']"
-          >
-            <template v-slot:prepend>
-              <q-icon name="monetization_on" />
-            </template>
-          </q-input>
-        </div>
-        <div class="col-4">
-          <q-select
-            outlined
-            dense
-            label="Moneda"
-            :options="['DOLAR', 'PESO']"
-            v-model="formData.currency"
-            :rules="[val => val && val !== null && val !== '' || 'Elija el tipo de moneda']"
-          />
-        </div>
-        <div class="col-4">
-          <q-select
-            outlined
-            dense
-            label="Cantidad"
-            :options="[1, 3, 6, 12, 18, 24, 36, 48]"
-            v-model="formData.quantity"
-            :rules="[val => val || 'Seleccione cuántos pagarés desea imprimir']"
+            label="Pagadero en"
+            v-model="formData.paymentAddress"
+            :rules="[val => val && val.length > 4 || 'Ingrese dirección de pagos']"
           />
         </div>
       </div>
       <div class="fieldset-title">Datos del Firmante</div>
       <div class="row q-col-gutter-sm">
-        <div class="col-4">
+        <div class="col-9">
           <q-input
             outlined
             dense
-            label="Apellido"
-            v-model="formData.lastName"
-            :rules="[val => val && val.length >= 4 || 'Ingrese el nombre del firmante']"
-          />
-        </div>
-        <div class="col-5">
-          <q-input
-            outlined
-            dense
-            label="Nombre"
-            v-model="formData.firstName"
-            :rules="[val => val && val.length >= 4 || 'Ingrese el apellido del firmante']"
+            label="Nombre y Apellido"
+            v-model="formData.name"
+            :rules="[val => val && val.length >= 4 || 'Ingrese nombre y apellido del firmante']"
           />
         </div>
         <div class="col-3">
@@ -152,14 +105,101 @@
             :rules="[val => val && val.length > 5 || 'Ingrese monto de cada pagaré']"
           />
         </div>
+      </div>
+      <div class="fieldset-title">
+        Lotes de Pagarés
+      </div>
+      <div class="row q-col-gutter-sm">
+        <div class="col-4">
+          <q-input
+            type="number"
+            outlined
+            dense
+            label="Cantidad"
+            v-model="amount.quantity"
+            @keyup.enter="pushAmount(amount)"
+          />
+        </div>
+        <div class="col-4">
+          <q-select
+            outlined
+            dense
+            label="Moneda"
+            :options="['DOLAR', 'PESO']"
+            v-model="amount.currency"
+          />
+        </div>
+        <div class="col-3">
+          <q-input
+            ref="amountInput"
+            type="number"
+            outlined
+            dense
+            label="Importe"
+            step="0.01"
+            v-model.number="amount.amount"
+          >
+            <template v-slot:prepend>
+              <q-icon name="monetization_on" />
+            </template>
+          </q-input>
+        </div>
+        <div class="col">
+          <q-btn
+            unelevated
+            color="secondary"
+            icon="add"
+            class="full-width"
+            style="margin-top: 2px"
+            @click="pushAmount(amount)"
+          />
+        </div>
+        <div class="col-12">
+          <q-markup-table
+            flat
+            bordered
+            v-if="amounts.length"
+          >
+            <thead>
+              <tr>
+                <th>Cantidad</th>
+                <th>Moneda</th>
+                <th>Importe</th>
+                <th>Borrar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(item, index) of amounts"
+                :key="index"
+              >
+                <td class="text-center">{{item.quantity}}</td>
+                <td class="text-center">{{item.currency}}</td>
+                <td class="text-center">$ {{item.amount}}</td>
+                <td class="text-center">
+                  <q-btn
+                    icon="delete"
+                    color="red"
+                    flat
+                    dense
+                    round
+                    @click="amounts.splice(index, 1)"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </q-markup-table>
+        </div>
+      </div>
 
+      <div class="row">
         <div class="col-4 offset-4 text-center q-mt-md">
           <q-btn
-            type="submit"
             icon="print"
             label="Imprimir"
             color="primary"
             unelevated
+            @click="submit"
           />
         </div>
       </div>
@@ -178,21 +218,22 @@ export default {
   },
   data () {
     return {
+      amount: {
+        amount: '',
+        currency: '',
+        quantity: ''
+      },
+      amounts: [],
       formData: {
         currentDate: '',
-        expDay: '',
-        expMonth: '',
-        firstName: '',
-        lastName: '',
+        expDate: '',
+        name: '',
         document: '',
         address1: '',
         address2: '',
         address3: '',
         phone: '',
-        product: '',
-        amount: '',
-        currency: '',
-        quantity: ''
+        product: ''
       }
     }
   },
@@ -209,30 +250,30 @@ export default {
   },
   methods: {
     ...mapActions('pdf', ['printPdf']),
+    pushAmount (amount) {
+      if (amount.amount > 0 && amount.currency.length && amount.quantity > 0) {
+        this.amounts.push(amount)
+        this.amount = {
+          amount: '',
+          currency: '',
+          quantity: ''
+        }
+        this.$refs.amountInput.focus()
+      }
+    },
+    submit () {
+      this.$refs.mainForm.submit()
+    },
     onSubmit () {
-      this.printPdf(this.formData)
+      if (this.amounts.length) {
+        this.formData.amounts = this.amounts
+        console.log(this.formData)
+        this.printPdf(this.formData)
+      } else {
+        alert('Especifique importes y cantidad de pagarés')
+      }
     },
     onReset () { }
-  },
-  created () {
-    if (!process.env.PROD) {
-      this.formData = {
-        currentDate: '2018-08-08',
-        expDay: 5,
-        expMonth: 'SEPTEMBER 2020',
-        firstName: 'TEST CUSTOMER',
-        lastName: 'TESTING',
-        document: '30222222',
-        address1: 'ADDRESS EXAMPLE',
-        address2: 'CITY EXAMPLE',
-        address3: 'PROVINCE EXAMPLE',
-        phone: '12131231',
-        product: 'PRODUCT OF SALE',
-        amount: '12353',
-        currency: 'DOLAR',
-        quantity: 6
-      }
-    }
   }
 }
 </script>
