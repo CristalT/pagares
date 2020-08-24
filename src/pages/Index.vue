@@ -25,7 +25,6 @@
           <date-input
             label="Próximo Vencimiento"
             v-model="formData.expDate"
-            autofocus
             :rules="[val => val && val.length || 'Complete la fecha del vencimiento']"
           />
         </div>
@@ -117,17 +116,13 @@
             dense
             label="Cantidad"
             v-model="amount.quantity"
-            @keyup.enter="pushAmount(amount)"
           />
         </div>
         <div class="col-4">
-          <q-select
-            outlined
-            dense
-            label="Moneda"
-            :options="['DOLAR', 'PESO']"
-            v-model="amount.currency"
-          />
+          <div class="row justify-evenly">
+            <q-radio label="Pesos" val="PESO" v-model="amount.currency" />
+            <q-radio label="Dólares" val="DOLAR" v-model="amount.currency" />
+          </div>
         </div>
         <div class="col-3">
           <q-input
@@ -138,6 +133,7 @@
             label="Importe"
             step="0.01"
             v-model.number="amount.amount"
+            @keyup.enter="pushAmount(amount)"
           >
             <template v-slot:prepend>
               <q-icon name="monetization_on" />
@@ -218,11 +214,7 @@ export default {
   },
   data () {
     return {
-      amount: {
-        amount: '',
-        currency: '',
-        quantity: ''
-      },
+      amount: {},
       amounts: [],
       formData: {
         currentDate: '',
@@ -253,11 +245,7 @@ export default {
     pushAmount (amount) {
       if (amount.amount > 0 && amount.currency.length && amount.quantity > 0) {
         this.amounts.push(amount)
-        this.amount = {
-          amount: '',
-          currency: '',
-          quantity: ''
-        }
+        this.amount = {}
         this.$refs.amountInput.focus()
       }
     },
